@@ -61,9 +61,12 @@ if [[ "$3" == "new" ]]; then
   remaining_args=("${local_args[@]:3}")
   FLOW_NAME=$(printf "%s " "${remaining_args[@]}")
   echo "Flow Name: ${FLOW_NAME}"
+  # Capture the Process Group Name from the json file
+  PG_NAME=$(jq -r '.flowContents.name' ${FILENAME})
+  echo "Process Group Name: "${PG_NAME}
   
   # Create an empty Process Group and get its ID
-  PROCESS_GROUP_ID=$(/opt/cloudera/parcels/CFM/TOOLKIT/bin/cli.sh nifi pg-create -pgn "${FLOW_NAME}" -p "${NIFI_CLI_PROPERTIES_FILE}")
+  PROCESS_GROUP_ID=$(/opt/cloudera/parcels/CFM/TOOLKIT/bin/cli.sh nifi pg-create -pgn "${PG_NAME}" -p "${NIFI_CLI_PROPERTIES_FILE}")
   echo "New process group ID: ${PROCESS_GROUP_ID}"
   
   # Authenticate with Kerberos to get a Bearer token
